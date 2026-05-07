@@ -11,4 +11,5 @@ data/
 coverage/
 *.tsbuildinfo
 resume-metrics.md
+private-project-docs.md
 .next/
