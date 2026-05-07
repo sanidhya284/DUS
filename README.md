@@ -1,74 +1,122 @@
-<div align="center">
-  <h1>🔗 DUS: Distributed URL Shortener</h1>
-  <p>A high-performance, analytics-rich URL shortener built for speed and scale.</p>
+# DUS — Distributed URL Shortener
 
-  [![Live Demo](https://img.shields.io/badge/Live_Demo-Visit_Site-blue?style=for-the-badge)](https://dus-web.vercel.app)
-  [![Tech Stack](https://img.shields.io/badge/Stack-Next.js_|_Express_|_MongoDB_|_Redis-black?style=for-the-badge)](#)
-</div>
+A high-performance, analytics-driven URL shortener engineered for speed, scalability, and reliability.
 
----
+## Overview
 
-## ⚡ Overview
+DUS (Distributed URL Shortener) is a production-ready platform designed to transform long URLs into concise, shareable links while delivering real-time analytics and enterprise-grade infrastructure.
 
-DUS (Distributed URL Shortener) is a production-ready application designed to transform long, cumbersome links into concise, shareable URLs. It goes beyond simple redirection by offering a robust analytics suite, real-time dashboard, and tiered rate-limiting.
+The project is built as a modern monorepo architecture that combines a highly responsive Next.js frontend with a performance-optimized Express/Node.js backend. Redis powers asynchronous processing, queue management, and advanced rate limiting to ensure low-latency redirects under heavy load.
 
-Built as a monorepo, it seamlessly connects a snappy, animated Next.js frontend with a highly optimized Express/Node.js backend, utilizing Redis for high-speed queues and rate limiting.
+## Features
 
-## ✨ Key Features
+### High-Performance Redirect Engine
 
-### 🚀 Lightning Fast Redirections
-- **Sub-100ms Redirects**: The core redirection engine is optimized to fetch and redirect users instantly.
-- **Asynchronous Analytics**: Click tracking and GeoIP resolution are offloaded to a Redis-backed BullMQ queue, ensuring that gathering data never slows down the user's redirect experience.
+* Sub-100ms redirects optimized for minimal latency
+* Non-blocking analytics pipeline using Redis-backed BullMQ workers
+* Efficient URL resolution designed for high concurrency workloads
+* Immediate HTTP 302 responses without waiting for analytics processing
 
-### 📊 Deep Analytics Dashboard
-- **Geographic Tracking**: Built-in MaxMind GeoLite2 integration resolves IPs to countries instantly.
-- **Device & Browser Insights**: Detailed breakdowns of what platforms your audience uses.
-- **Interactive Visualizations**: Beautiful, animated charts powered by Recharts give you an at-a-glance understanding of your traffic.
+### Real-Time Analytics Dashboard
 
-### 🛡️ Enterprise-Grade Security & Abuse Prevention
-- **Tiered Rate Limiting**: Intelligent rate limiting utilizing Redis token buckets. Protects against spam while offering different tiers (Anonymous, Free, Pro).
-- **Asymmetric JWT Authentication**: Secure user sessions powered by RS256 keypairs.
-- **Privacy-First**: IP addresses are uniquely hashed before storage, allowing for unique visitor tracking without storing raw PII.
+* Geographic analytics powered by MaxMind GeoLite2
+* Device, browser, and platform insights
+* Interactive charts and visualizations using Recharts
+* Real-time click tracking and traffic monitoring
 
-### 🎨 "Pro-Max" Aesthetic Frontend
-- **Fluid Animations**: Utilizing Framer Motion for highly polished micro-interactions and page transitions.
-- **Responsive Data Tables**: Optimistic UI updates ensure that creating or deleting URLs feels instantaneous.
+### Security & Abuse Protection
 
-## 🛠️ Technology Stack
+* Tiered rate limiting using Redis token bucket strategies
+* RS256 asymmetric JWT authentication
+* Privacy-focused analytics with hashed IP storage
+* Spam and abuse prevention for public endpoints
 
-**Frontend (Client)**
+### Modern Frontend Experience
+
+* Built with Next.js 15 App Router
+* Smooth UI interactions with Framer Motion
+* Responsive dashboard and data tables
+* Optimistic UI updates for seamless interactions
+
+## Tech Stack
+
+### Frontend
+
 * Next.js 15 (App Router)
-* Tailwind CSS v4 & Radix UI
-* React Query (Server State) & Zustand (Client State)
-* Recharts & Framer Motion
+* React
+* Tailwind CSS v4
+* Radix UI
+* React Query
+* Zustand
+* Recharts
+* Framer Motion
 
-**Backend (API)**
-* Node.js & Express (TypeScript)
-* MongoDB (Mongoose)
-* Redis (Upstash) & BullMQ (Background Jobs)
-* Zod (Schema Validation)
-* Jest (Testing)
+### Backend
 
-## 🚦 Usage
+* Node.js
+* Express.js (TypeScript)
+* MongoDB with Mongoose
+* Redis (Upstash)
+* BullMQ
+* Zod
+* Jest
 
-1. **Sign Up / Log In**: Create an account to access the dashboard.
-2. **Shorten**: Paste any valid URL into the input field.
-3. **Share**: Copy your new `dus.vercel.app/xxxxx` link.
-4. **Track**: Monitor clicks, locations, and devices in real-time from your dashboard.
+## Usage
 
-## 🏗️ Architecture Highlight: The "Fast Path"
+### Authentication
 
-The most critical component of a URL shortener is the redirect speed. DUS achieves this by separating the redirect from the analytics:
+Create an account or sign in to access the analytics dashboard and URL management features.
 
-1. Request hits `/:shortCode`.
-2. Database is queried for the original URL.
-3. **API sends `302 Found` to the user immediately.**
-4. *Simultaneously*, the API drops a payload (User-Agent, IP) into a Redis Queue.
-5. A background worker picks up the job, resolves the GeoIP, and updates the analytics database.
+### Create Short URLs
 
-This guarantees that complex data processing never blocks the user from reaching their destination.
+Paste any valid URL into the input field to generate a shortened link instantly.
+
+### Share Links
+
+Distribute compact, shareable URLs generated by the platform.
+
+### Track Analytics
+
+Monitor clicks, geographic distribution, devices, browsers, and traffic trends in real time.
+
+## Architecture
+
+### Fast Path Redirect Pipeline
+
+The redirect system is designed around a separation of concerns model to maximize performance.
+
+1. A request reaches the `/:shortCode` endpoint
+2. The backend resolves the original URL from the database
+3. The API immediately returns an HTTP `302 Found` redirect
+4. Analytics metadata is asynchronously pushed into a Redis queue
+5. Background workers process GeoIP resolution and analytics aggregation
+
+This architecture ensures that analytics processing never blocks user redirection, maintaining consistently fast response times even under heavy traffic.
+
+## Project Goals
+
+DUS was built with a strong emphasis on:
+
+* Performance
+* Scalability
+* Reliability
+* Clean architecture
+* Developer experience
+* Modern UI/UX design
+
+## Future Improvements
+
+* Custom domains
+* QR code generation
+* Link expiration and scheduling
+* Team collaboration features
+* Advanced analytics exports
+* Edge-based redirect caching
+
+## License
+
+MIT License
 
 ---
-<div align="center">
-  <i>Built with focus on performance, aesthetics, and developer experience.</i>
-</div>
+
+Built with modern web technologies and a focus on performance-first system design.
