@@ -13,9 +13,11 @@ const envSchema = z.object({
   REDIS_URL: z.string().min(1),
   REDIS_PASSWORD: z.string().optional(),
 
-  // JWT
-  JWT_PRIVATE_KEY_PATH: z.string().min(1),
-  JWT_PUBLIC_KEY_PATH: z.string().min(1),
+  // JWT — inline base64-encoded PEM (production) OR file paths (development)
+  JWT_PRIVATE_KEY: z.string().optional(),       // base64 PEM: `base64 -i private.pem | tr -d '\n'`
+  JWT_PUBLIC_KEY: z.string().optional(),        // base64 PEM: `base64 -i public.pem | tr -d '\n'`
+  JWT_PRIVATE_KEY_PATH: z.string().optional(),  // fallback: local dev file path
+  JWT_PUBLIC_KEY_PATH: z.string().optional(),   // fallback: local dev file path
   JWT_ACCESS_EXPIRES_IN: z.string().default('15m'),
   JWT_REFRESH_EXPIRES_IN: z.string().default('7d'),
 
@@ -35,9 +37,21 @@ const envSchema = z.object({
   // GeoIP
   GEOIP_DB_PATH: z.string().default('./data/GeoLite2-Country.mmdb'),
 
+  // CORS
+  CORS_ORIGIN: z.string().optional(),
+
   // Safe Browsing (optional)
   GOOGLE_SAFE_BROWSING_API_KEY: z.string().optional(),
-});
+}).refine(
+  (data) =>
+    (data.JWT_PRIVATE_KEY || data.JWT_PRIVATE_KEY_PATH) &&
+    (data.JWT_PUBLIC_KEY || data.JWT_PUBLIC_KEY_PATH),
+  {
+    message:
+      'Provide JWT_PRIVATE_KEY + JWT_PUBLIC_KEY (base64 PEM, production) ' +
+      'or JWT_PRIVATE_KEY_PATH + JWT_PUBLIC_KEY_PATH (file paths, development)',
+  }
+);
 
 const parsed = envSchema.safeParse(process.env);
 

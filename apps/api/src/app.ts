@@ -24,8 +24,12 @@ const app = express();
 app.use(helmet());
 
 // CORS
+const allowedOrigins = env.CORS_ORIGIN
+  ? env.CORS_ORIGIN.split(',').map((o) => o.trim())
+  : ['*'];
+
 app.use(cors({
-  origin: env.NODE_ENV === 'production' ? env.API_BASE_URL : '*',
+  origin: env.NODE_ENV === 'production' ? allowedOrigins : '*',
   methods: ['GET', 'POST', 'PATCH', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Request-ID'],
 }));

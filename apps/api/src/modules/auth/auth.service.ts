@@ -14,13 +14,39 @@ let privateKey: string;
 let publicKey: string;
 
 function getPrivateKey(): string {
-  if (!privateKey) privateKey = fs.readFileSync(path.resolve(env.JWT_PRIVATE_KEY_PATH), 'utf8');
-  return privateKey;
+  if (privateKey) return privateKey;
+
+  // Production: inline base64-encoded PEM via JWT_PRIVATE_KEY env var
+  if (env.JWT_PRIVATE_KEY) {
+    privateKey = Buffer.from(env.JWT_PRIVATE_KEY, 'base64').toString('utf8');
+    return privateKey;
+  }
+
+  // Development: read from file path
+  if (env.JWT_PRIVATE_KEY_PATH) {
+    privateKey = fs.readFileSync(path.resolve(env.JWT_PRIVATE_KEY_PATH), 'utf8');
+    return privateKey;
+  }
+
+  throw new Error('No JWT private key configured');
 }
 
 function getPublicKey(): string {
-  if (!publicKey) publicKey = fs.readFileSync(path.resolve(env.JWT_PUBLIC_KEY_PATH), 'utf8');
-  return publicKey;
+  if (publicKey) return publicKey;
+
+  // Production: inline base64-encoded PEM via JWT_PUBLIC_KEY env var
+  if (env.JWT_PUBLIC_KEY) {
+    publicKey = Buffer.from(env.JWT_PUBLIC_KEY, 'base64').toString('utf8');
+    return publicKey;
+  }
+
+  // Development: read from file path
+  if (env.JWT_PUBLIC_KEY_PATH) {
+    publicKey = fs.readFileSync(path.resolve(env.JWT_PUBLIC_KEY_PATH), 'utf8');
+    return publicKey;
+  }
+
+  throw new Error('No JWT public key configured');
 }
 
 function generateTokens(payload: Omit<JwtPayload, 'iat' | 'exp'>): AuthTokens {

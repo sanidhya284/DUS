@@ -17,10 +17,21 @@ declare global {
 let publicKey: string;
 
 function getPublicKey(): string {
-  if (!publicKey) {
-    publicKey = fs.readFileSync(path.resolve(env.JWT_PUBLIC_KEY_PATH), 'utf8');
+  if (publicKey) return publicKey;
+
+  // Production: inline base64-encoded PEM
+  if (env.JWT_PUBLIC_KEY) {
+    publicKey = Buffer.from(env.JWT_PUBLIC_KEY, 'base64').toString('utf8');
+    return publicKey;
   }
-  return publicKey;
+
+  // Development: read from file path
+  if (env.JWT_PUBLIC_KEY_PATH) {
+    publicKey = fs.readFileSync(path.resolve(env.JWT_PUBLIC_KEY_PATH), 'utf8');
+    return publicKey;
+  }
+
+  throw new Error('No JWT public key configured');
 }
 
 export function authenticate(req: Request, _res: Response, next: NextFunction): void {
