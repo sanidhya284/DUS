@@ -9,7 +9,8 @@
   "scripts": {
     "dev:api": "npm run dev --workspace=apps/api",
     "dev:worker": "npm run dev --workspace=apps/analytics-worker",
-    "dev": "concurrently \"npm run dev:api\" \"npm run dev:worker\"",
+    "dev:web": "PORT=3001 npm run dev --workspace=apps/web",
+    "dev": "concurrently \"npm run dev:api\" \"npm run dev:worker\" \"npm run dev:web\"",
     "build": "npm run build --workspaces",
     "test": "npm run test --workspaces --if-present",
     "lint": "npm run lint --workspaces --if-present"
