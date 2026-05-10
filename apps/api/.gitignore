@@ -1,0 +1,16 @@
+# env files — never commit real secrets
+.env
+.env.*
+!.env.example
+
+# build output
+dist/
+
+# logs
+*.log
+
+# test coverage
+coverage/
+
+# TypeScript incremental build info
+*.tsbuildinfo
